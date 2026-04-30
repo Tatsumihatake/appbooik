@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- AREA KONTEN (Berada di atas menu bawah) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_menu_container">
+
+        <!-- ========================================= -->
+        <!-- 1. HALAMAN HOME (Muncul Pertama Kali)     -->
+        <!-- ========================================= -->
+        <LinearLayout
+            android:id="@+id/page_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hi Fela"
+                android:textColor="#000000"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="What are you reading today?"
+                android:textColor="#808080"
+                android:textSize="16sp" />
+
+            <!-- Tempat RecyclerView (Ilmu Modul 3) yang akan kita buat nanti -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_books_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+
+        <!-- ========================================= -->
+        <!-- 2. HALAMAN SEARCH (Awalnya Disembunyikan) -->
+        <!-- ========================================= -->
+        <LinearLayout
+            android:id="@+id/page_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <!-- Menggunakan EditText seperti di Modul 1 -->
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F5F5F5"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:drawablePadding="12dp"
+                android:hint="Search"
+                android:padding="16dp" />
+        </LinearLayout>
+
+        <!-- ========================================= -->
+        <!-- 3. HALAMAN LIBRARY / MY BOOKS (Disembunyikan) -->
+        <!-- ========================================= -->
+        <RelativeLayout
+            android:id="@+id/page_library"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvHeaderLibrary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="32dp"
+                android:text="My Books"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Tombol Toggle (Bisa pakai ToggleButton dari Modul 2, tapi ini simulasi UI) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvHeaderLibrary"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:background="#F5F5F5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="12dp"
+                    android:text="Liked Books"
+                    android:textColor="#808080" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#000000"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="12dp"
+                    android:text="Downloads"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Menggunakan ImageButton seperti di Modul 2 untuk Upload -->
+            <ImageButton
+                android:id="@+id/btn_upload"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="#000000"
+                android:src="@android:drawable/ic_menu_upload"
+                android:tint="#FFFFFF" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!-- ========================================= -->
+    <!-- MENU BAWAH MANUAL (Menggunakan LinearLayout) -->
+    <!-- Sesuai permintaan: tulisan "www" diganti logo rumah -->
+    <!-- ========================================= -->
+    <LinearLayout
+        android:id="@+id/bottom_menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        android:elevation="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="12dp">
+
+        <!-- Logo Home -->
+        <ImageView
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_myplaces"
+            android:tint="#000000" />
+
+        <ImageView
+            android:id="@+id/nav_search"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_search"
+            android:tint="#000000" />
+
+        <ImageView
+            android:id="@+id/nav_notifications"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_popup_reminder"
+            android:tint="#000000" />
+
+        <ImageView
+            android:id="@+id/nav_library"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_agenda"
+            android:tint="#000000" />
+    </LinearLayout>
+
+</RelativeLayout>
