@@ -4,15 +4,13 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- AREA KONTEN (Berada di atas menu bawah) -->
+    <!-- AREA KONTEN (Di atas menu bawah) -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_menu_container">
 
-        <!-- ========================================= -->
-        <!-- 1. HALAMAN HOME (Muncul Pertama Kali)     -->
-        <!-- ========================================= -->
+        <!-- 1. HALAMAN HOME -->
         <LinearLayout
             android:id="@+id/page_home"
             android:layout_width="match_parent"
@@ -24,7 +22,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hi Fela"
+                android:text="Halo Fela"
                 android:textColor="#000000"
                 android:textSize="32sp"
                 android:textStyle="bold" />
@@ -33,11 +31,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="What are you reading today?"
+                android:text="Lanjutkan bacaanmu hari ini."
                 android:textColor="#808080"
                 android:textSize="16sp" />
 
-            <!-- Tempat RecyclerView (Ilmu Modul 3) yang akan kita buat nanti -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_books_home"
                 android:layout_width="match_parent"
@@ -45,9 +42,7 @@
                 android:layout_marginTop="16dp" />
         </LinearLayout>
 
-        <!-- ========================================= -->
-        <!-- 2. HALAMAN SEARCH (Awalnya Disembunyikan) -->
-        <!-- ========================================= -->
+        <!-- 2. HALAMAN SEARCH -->
         <LinearLayout
             android:id="@+id/page_search"
             android:layout_width="match_parent"
@@ -56,7 +51,6 @@
             android:padding="32dp"
             android:visibility="gone">
 
-            <!-- Menggunakan EditText seperti di Modul 1 -->
             <EditText
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
@@ -64,13 +58,46 @@
                 android:background="#F5F5F5"
                 android:drawableLeft="@android:drawable/ic_menu_search"
                 android:drawablePadding="12dp"
-                android:hint="Search"
+                android:hint="Cari buku..."
                 android:padding="16dp" />
         </LinearLayout>
 
-        <!-- ========================================= -->
-        <!-- 3. HALAMAN LIBRARY / MY BOOKS (Disembunyikan) -->
-        <!-- ========================================= -->
+        <!-- 3. HALAMAN RIWAYAT (Dulu Notifikasi) -->
+        <LinearLayout
+            android:id="@+id/page_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone"
+            android:background="#F8FAFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Riwayat Baca"
+                android:textColor="#1A56DB"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Daftar buku yang terakhir kamu baca"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:layout_marginBottom="20dp"/>
+
+            <ListView
+                android:id="@+id/lvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="12dp"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+        <!-- 4. HALAMAN LIBRARY -->
         <RelativeLayout
             android:id="@+id/page_library"
             android:layout_width="match_parent"
@@ -83,41 +110,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
-                android:text="My Books"
+                android:text="Koleksi Saya"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- Tombol Toggle (Bisa pakai ToggleButton dari Modul 2, tapi ini simulasi UI) -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvHeaderLibrary"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp"
-                android:background="#F5F5F5"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="12dp"
-                    android:text="Liked Books"
-                    android:textColor="#808080" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#000000"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="12dp"
-                    android:text="Downloads"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Menggunakan ImageButton seperti di Modul 2 untuk Upload -->
             <ImageButton
                 android:id="@+id/btn_upload"
                 android:layout_width="56dp"
@@ -133,22 +130,17 @@
 
     </RelativeLayout>
 
-    <!-- ========================================= -->
-    <!-- MENU BAWAH MANUAL (Menggunakan LinearLayout) -->
-    <!-- Sesuai permintaan: tulisan "www" diganti logo rumah -->
-    <!-- ========================================= -->
+    <!-- MENU NAVIGASI BAWAH -->
     <LinearLayout
         android:id="@+id/bottom_menu_container"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="#FFFFFF"
-        android:elevation="16dp"
+        android:elevation="12dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="12dp">
+        android:orientation="horizontal">
 
-        <!-- Logo Home -->
         <ImageView
             android:id="@+id/nav_home"
             android:layout_width="0dp"
@@ -163,15 +155,16 @@
             android:layout_height="24dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_menu_search"
-            android:tint="#000000" />
+            android:tint="#808080" />
 
+        <!-- Ikon Riwayat (Jam) -->
         <ImageView
             android:id="@+id/nav_notifications"
             android:layout_width="0dp"
             android:layout_height="24dp"
             android:layout_weight="1"
-            android:src="@android:drawable/ic_popup_reminder"
-            android:tint="#000000" />
+            android:src="@android:drawable/ic_menu_recent_history"
+            android:tint="#808080" />
 
         <ImageView
             android:id="@+id/nav_library"
@@ -179,7 +172,7 @@
             android:layout_height="24dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_menu_agenda"
-            android:tint="#000000" />
+            android:tint="#808080" />
     </LinearLayout>
 
 </RelativeLayout>
