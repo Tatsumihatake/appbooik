@@ -1,36 +1,37 @@
 package com.example.appbook2
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.appbook2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    // Menggunakan ViewBinding sesuai standar industri
+    // Mempertahankan ViewBinding Anda yang sudah benar
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Set ViewBinding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         supportActionBar?.hide()
 
-        // TODO: FASE 1 - Nantinya ini akan dihubungkan dengan Navigation Component.
-        // Untuk sementara, kita berikan logika dasar pada BottomNavigationView
-        // Kita telah menghapus sistem View.GONE / View.VISIBLE yang merusak memori.
+        // HAPUS blok kode bottomNavigation.setOnItemSelectedListener lama Anda.
+        // GANTIKAN dengan 3 baris kode Jetpack Navigation di bawah ini:
 
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when(item.itemId) {
-                // R.id.nav_home -> loadFragment(HomeFragment()) // Akan diaktifkan setelah fragment dibuat
-                // R.id.nav_search -> loadFragment(SearchFragment())
-                // R.id.nav_library -> loadFragment(LibraryFragment())
-            }
-            true
-        }
+        // 1. Ambil NavHostFragment dari XML yang sudah kita buat
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        Toast.makeText(this, "Sistem Navigasi sedang direfaktor menuju standar industri.", Toast.LENGTH_LONG).show()
+        // 2. Ambil NavController (Sopir otomatis yang memindahkan halaman)
+        val navController = navHostFragment.navController
+
+        // 3. Sambungkan Bottom Navigation dengan NavController
+        // Ini akan otomatis mencocokkan ID di menu XML dengan ID di nav_graph XML
+        binding.bottomNavigation.setupWithNavController(navController)
+
+        // (Biarkan kode tambahan lain milik Anda di bawah ini jika ada)
     }
 }
