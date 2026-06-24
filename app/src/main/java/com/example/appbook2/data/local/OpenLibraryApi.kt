@@ -1,6 +1,6 @@
-package com.example.appbook2.data.api
+package com.example.appbook2.data.local
 
-import com.example.appbook2.data.model.BookSearchResponse
+import com.example.appbook2.data.api.BookSearchResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,4 +1,4 @@
-package com.example.appbook2.data.api
+package com.example.appbook2.data.local
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
