@@ -33,6 +33,11 @@
             android:name=".OnboardingActivity"
             android:exported="false" />
 
+        <!-- Book Detail Activity -->
+        <activity
+            android:name=".BookDetailActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -6,7 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface OpenLibraryApi {
-    // Endpoint: search.json?q=android
     @GET("search.json")
     suspend fun searchBooks(
         @Query("q") query: String

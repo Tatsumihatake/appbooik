@@ -1,10 +1,11 @@
 package com.example.appbook2.data.local
 
+import com.example.appbook2.data.local.OpenLibraryApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "[https://openlibrary.org/](https://openlibrary.org/)"
+    private const val BASE_URL = "https://openlibrary.org/"
 
     val instance: OpenLibraryApi by lazy {
         val retrofit = Retrofit.Builder()
