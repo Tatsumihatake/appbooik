@@ -1,6 +1,5 @@
 package com.example.appbook2
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,8 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appbook2.data.api.BookDoc
-import com.example.appbook2.data.local.ApiClient
+import com.example.appbook2.data.local.ApiClient // Pastikan import sesuai dengan struktur Anda
 import com.example.appbook2.ui.adapter.BookAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,44 +27,37 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // 1. Hubungkan file Kotlin ini dengan desain fragment_home.xml
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        // 2. Kaitkan variabel dengan ID di XML
         rvPopularBooks = view.findViewById(R.id.rvPopularBooks)
         progressBar = view.findViewById(R.id.progressBar)
 
+        // 3. Setup RecyclerView (Arah *scroll* ke samping / Horizontal)
         rvPopularBooks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        
-        // Inisialisasi Adapter beserta aksi kliknya
-        bookAdapter = BookAdapter(emptyList<BookDoc>()) { clickedBook ->
-            // Buka Activity Detail
-            val intent = Intent(requireContext(), BookDetailActivity::class.java)
-            intent.putExtra("BOOK_TITLE", clickedBook.title)
-            intent.putExtra("BOOK_COVER_URL", clickedBook.getCoverUrl())
-            
-            // Ambil nama penulis pertama jika ada
-            val authorName = clickedBook.authorName?.firstOrNull() ?: "Penulis Tidak Diketahui"
-            intent.putExtra("BOOK_AUTHOR", authorName)
-            
-            startActivity(intent)
-        }
-        
+        bookAdapter = BookAdapter(emptyList()) // Daftar awal kosong
         rvPopularBooks.adapter = bookAdapter
 
+        // 4. Perintahkan aplikasi untuk mendownload data API
         fetchBooks()
 
         return view
     }
 
     private fun fetchBooks() {
-        progressBar.visibility = View.VISIBLE
+        progressBar.visibility = View.VISIBLE // Munculkan lingkaran loading
 
+        // Gunakan Coroutine (Jalan di latar belakang agar HP tidak freeze)
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Mencari buku dengan kata kunci "Android" ke OpenLibrary
                 val response = ApiClient.instance.searchBooks("Android")
 
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressBar.visibility = View.GONE // Hilangkan loading
                     if (response.isSuccessful && response.body() != null) {
+                        // Jika sukses, masukkan daftar buku ke dalam Adapter
                         val books = response.body()!!.books
                         bookAdapter.updateData(books)
                     } else {
