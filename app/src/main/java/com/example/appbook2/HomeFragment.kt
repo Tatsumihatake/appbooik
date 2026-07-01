@@ -1,74 +1,80 @@
 package com.example.appbook2
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appbook2.data.local.ApiClient // Pastikan import sesuai dengan struktur Anda
+import com.example.appbook2.data.api.ApiClient
 import com.example.appbook2.ui.adapter.BookAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
-
-    private lateinit var rvPopularBooks: RecyclerView
-    private lateinit var progressBar: ProgressBar
     private lateinit var bookAdapter: BookAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // 1. Hubungkan file Kotlin ini dengan desain fragment_home.xml
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        
+        val rvBooks = view.findViewById<RecyclerView>(R.id.rvPopularBooks)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+        val etSearch = view.findViewById<EditText>(R.id.etSearchQuery)
+        val btnSearch = view.findViewById<Button>(R.id.btnSearch)
 
-        // 2. Kaitkan variabel dengan ID di XML
-        rvPopularBooks = view.findViewById(R.id.rvPopularBooks)
-        progressBar = view.findViewById(R.id.progressBar)
+        rvBooks.layoutManager = LinearLayoutManager(requireContext()) // Scroll ke bawah (Vertical)
+        bookAdapter = BookAdapter(emptyList()) { clickedBook ->
+            val intent = Intent(requireContext(), BookDetailActivity::class.java)
+            intent.putExtra("BOOK_TITLE", clickedBook.title)
+            intent.putExtra("BOOK_COVER_URL", clickedBook.getCoverUrl())
+            intent.putExtra("BOOK_AUTHOR", clickedBook.authorName?.firstOrNull() ?: "Anonim")
+            startActivity(intent)
+        }
+        rvBooks.adapter = bookAdapter
 
-        // 3. Setup RecyclerView (Arah *scroll* ke samping / Horizontal)
-        rvPopularBooks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        bookAdapter = BookAdapter(emptyList()) // Daftar awal kosong
-        rvPopularBooks.adapter = bookAdapter
-
-        // 4. Perintahkan aplikasi untuk mendownload data API
-        fetchBooks()
-
+        btnSearch.setOnClickListener {
+            val query = etSearch.text.toString()
+            if (query.isNotEmpty()) {
+                fetchBooks(query, progressBar)
+            } else {
+                Toast.makeText(requireContext(), "Masukkan judul buku untuk mencari", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        // Panggilan awal default
+        fetchBooks("Android", progressBar) 
         return view
     }
 
-    private fun fetchBooks() {
-        progressBar.visibility = View.VISIBLE // Munculkan lingkaran loading
-
-        // Gunakan Coroutine (Jalan di latar belakang agar HP tidak freeze)
+    private fun fetchBooks(query: String, progress: ProgressBar) {
+        progress.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Mencari buku dengan kata kunci "Android" ke OpenLibrary
-                val response = ApiClient.instance.searchBooks("Android")
-
+                val response = ApiClient.instance.searchBooks(query)
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE // Hilangkan loading
-                    if (response.isSuccessful && response.body() != null) {
-                        // Jika sukses, masukkan daftar buku ke dalam Adapter
-                        val books = response.body()!!.books
+                    progress.visibility = View.GONE
+                    if (response.isSuccessful) {
+                        val books = response.body()?.books ?: emptyList()
                         bookAdapter.updateData(books)
+                        if (books.isEmpty()) {
+                            Toast.makeText(requireContext(), "Buku tidak ditemukan", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         Toast.makeText(requireContext(), "Gagal memuat data", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
-                    Log.e("HomeFragment", "Error fetching books: ${e.message}")
-                    Toast.makeText(requireContext(), "Terjadi kesalahan jaringan", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) { 
+                    progress.visibility = View.GONE 
+                    Toast.makeText(requireContext(), "Kesalahan jaringan: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

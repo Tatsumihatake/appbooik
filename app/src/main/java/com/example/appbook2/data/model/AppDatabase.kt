@@ -1,4 +1,4 @@
-package com.example.appbook2.data.local
+package com.example.appbook2.data.model
 
 import android.content.Context
 import androidx.room.Database
@@ -7,23 +7,13 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [ReadingProgress::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun progressDao(): ProgressDao
-
     companion object {
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-
-        fun getDatabase(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "appbook_database"
-                ).build()
-                INSTANCE = instance
-                instance
-            }
+        @Volatile private var INSTANCE: AppDatabase? = null
+        fun getDatabase(context: Context): AppDatabase = INSTANCE ?: synchronized(this) {
+            Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "appbook_db")
+                .build()
+                .also { INSTANCE = it }
         }
     }
 }

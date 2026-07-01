@@ -13,19 +13,19 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide()
 
+        // Cek apakah ini pertama kali aplikasi dibuka
+        val sharedPreferences = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        val isFirstTime = sharedPreferences.getBoolean("isFirstTimeOpen", true)
+
         Handler(Looper.getMainLooper()).postDelayed({
-            // Cek di memori apakah ini pertama kali aplikasi dibuka
-            val sharedPreferences = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-            val isFirstTime = sharedPreferences.getBoolean("isFirstTimeOpen", true)
-
-            val intent = if (isFirstTime) {
-                Intent(this, OnboardingActivity::class.java)
+            if (isFirstTime) {
+                // Jika baru pertama kali, masuk ke Onboarding
+                startActivity(Intent(this, OnboardingActivity::class.java))
             } else {
-                Intent(this, MainActivity::class.java)
+                // Jika sudah pernah buka, langsung ke Main
+                startActivity(Intent(this, MainActivity::class.java))
             }
-
-            startActivity(intent)
             finish()
-        }, 3000)
+        }, 2000)
     }
 }

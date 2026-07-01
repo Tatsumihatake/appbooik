@@ -66,8 +66,8 @@ dependencies {
     // 4. Coroutines (Untuk menjalankan API dan Database di background thread)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // 5. Google Maps & Location (Untuk fitur LBS)
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    // 5. Osmdroid & Google Location (Untuk fitur LBS)
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("com.google.android.gms:play-services-location:21.2.0")
 
     // 6. Room Database (Simulasi penyimpanan real-time progress di lokal)
