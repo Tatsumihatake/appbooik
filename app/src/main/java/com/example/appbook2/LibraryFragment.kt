@@ -15,12 +15,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LibraryFragment : Fragment() {
-    private lateinit var rvHistory: RecyclerView
     private lateinit var adapter: HistoryAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_library, container, false)
-        rvHistory = view.findViewById(R.id.rvHistory)
+        val rvHistory = view.findViewById<RecyclerView>(R.id.rvHistory)
         rvHistory.layoutManager = LinearLayoutManager(requireContext())
         adapter = HistoryAdapter(emptyList())
         rvHistory.adapter = adapter
@@ -30,11 +29,8 @@ class LibraryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch(Dispatchers.IO) {
-            val db = AppDatabase.getDatabase(requireContext())
-            val data = db.progressDao().getAllHistory()
-            withContext(Dispatchers.Main) { 
-                adapter.updateData(data) 
-            }
+            val data = AppDatabase.getDatabase(requireContext()).progressDao().getAllHistory()
+            withContext(Dispatchers.Main) { adapter.updateData(data) }
         }
     }
 }

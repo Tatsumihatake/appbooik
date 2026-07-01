@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    // Tambahkan plugin parcelize untuk passing object data antar halaman
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
 }
 
@@ -29,51 +29,48 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
-    // Aktifkan viewBinding untuk mempermudah pemanggilan ID dari XML
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
-    // --- DEPENDENSI BARU UNTUK FASE SELANJUTNYA ---
-
-    // 1. Navigation Component (Standar untuk pindah halaman)
+    
+    // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-
-    // 2. Retrofit & Gson (Untuk memanggil API Buku Open Source)
+    
+    // Retrofit & Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    // 3. Glide (Untuk meload gambar dari internet ke ImageView)
+    
+    // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
-
-    // 4. Coroutines (Untuk menjalankan API dan Database di background thread)
+    
+    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-    // 5. Osmdroid & Google Location (Untuk fitur LBS)
+    
+    // Osmdroid (Peta LBS Open Source)
     implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("com.google.android.gms:play-services-location:21.2.0")
+    // Ubah semua ke 2.7.0-alpha11 untuk sinkronisasi sempurna
 
-    // 6. Room Database (Simulasi penyimpanan real-time progress di lokal)
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    // annotationProcessor("androidx.room:room-compiler:2.6.1") // Gunakan ksp di project nyata
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -27,19 +27,14 @@ class SearchFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Load OSM configuration
         context?.let { Configuration.getInstance().load(it, PreferenceManager.getDefaultSharedPreferences(it)) }
-        
         val view = inflater.inflate(R.layout.fragment_search, container, false)
         map = view.findViewById(R.id.mapView)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            setupMap()
-        } else {
-            reqLoc.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
-        }
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) setupMap()
+        else reqLoc.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
         return view
     }
 
@@ -54,25 +49,11 @@ class SearchFragment : Fragment() {
                 val pt = GeoPoint(loc.latitude, loc.longitude)
                 map.controller.setZoom(15.0)
                 map.controller.setCenter(pt)
-                
-                // Marker perpustakaan simulasi (LBS Demo)
-                val m = Marker(map).apply { 
-                    position = GeoPoint(pt.latitude + 0.002, pt.longitude + 0.002)
-                    title = "Perpustakaan Terdekat (Simulasi)" 
-                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                }
+                val m = Marker(map).apply { position = GeoPoint(pt.latitude+0.002, pt.longitude+0.002); title = "Perpustakaan (Demo)" }
                 map.overlays.add(m)
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        map.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        map.onPause()
-    }
+    override fun onResume() { super.onResume(); map.onResume() }
+    override fun onPause() { super.onPause(); map.onPause() }
 }

@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,13 +21,12 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        
         val rvBooks = view.findViewById<RecyclerView>(R.id.rvPopularBooks)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
         val etSearch = view.findViewById<EditText>(R.id.etSearchQuery)
         val btnSearch = view.findViewById<Button>(R.id.btnSearch)
 
-        rvBooks.layoutManager = LinearLayoutManager(requireContext()) // Scroll ke bawah (Vertical)
+        rvBooks.layoutManager = LinearLayoutManager(requireContext())
         bookAdapter = BookAdapter(emptyList()) { clickedBook ->
             val intent = Intent(requireContext(), BookDetailActivity::class.java)
             intent.putExtra("BOOK_TITLE", clickedBook.title)
@@ -42,14 +38,8 @@ class HomeFragment : Fragment() {
 
         btnSearch.setOnClickListener {
             val query = etSearch.text.toString()
-            if (query.isNotEmpty()) {
-                fetchBooks(query, progressBar)
-            } else {
-                Toast.makeText(requireContext(), "Masukkan judul buku untuk mencari", Toast.LENGTH_SHORT).show()
-            }
+            if (query.isNotEmpty()) fetchBooks(query, progressBar)
         }
-        
-        // Panggilan awal default
         fetchBooks("Android", progressBar) 
         return view
     }
@@ -58,24 +48,13 @@ class HomeFragment : Fragment() {
         progress.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val response = ApiClient.instance.searchBooks(query)
+                val response = ApiClient.instance.searchBooks(query, 15)
                 withContext(Dispatchers.Main) {
                     progress.visibility = View.GONE
-                    if (response.isSuccessful) {
-                        val books = response.body()?.books ?: emptyList()
-                        bookAdapter.updateData(books)
-                        if (books.isEmpty()) {
-                            Toast.makeText(requireContext(), "Buku tidak ditemukan", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(requireContext(), "Gagal memuat data", Toast.LENGTH_SHORT).show()
-                    }
+                    if (response.isSuccessful) bookAdapter.updateData(response.body()?.books ?: emptyList())
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { 
-                    progress.visibility = View.GONE 
-                    Toast.makeText(requireContext(), "Kesalahan jaringan: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                withContext(Dispatchers.Main) { progress.visibility = View.GONE }
             }
         }
     }
